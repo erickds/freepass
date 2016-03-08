@@ -10,10 +10,12 @@ class Admin_model extends CI_Model {
 		$this->db->join('Pessoa p', 'r.id_pessoa=p.id', 'left');
 		//where id = $rfid
 		$this->db->where('r.id',$rfid);
-		//roda query
+		//setando query
 		$user_ok = $this->db->get();
+		
 		if($user_ok->num_rows()){
-			return $query->result();
+			//Executa a query e retorna para controller Admin o array com os usuários.
+			return $user_ok->result();
 		}else{
 			return FALSE;
 		}

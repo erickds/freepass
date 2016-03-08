@@ -10,11 +10,10 @@ class Admin extends CI_Controller {
 			if($this->form_validation->run() === TRUE){
 				
 				$this->load->model('Admin_model');
-
+ 
 				$rfid = $this->input->post('rfid');
-
-				
-				//valida no banco
+		
+				//valida no banco e recebe Array com o usuário
 				$user_ok = $this->Admin_model->check_login($rfid);
 
 				if($user_ok){
@@ -22,7 +21,7 @@ class Admin extends CI_Controller {
 					$session = array(
 						'rfid' => $rfid,
 						'permitido' => TRUE,
-						'userName' => $nome
+						'userName' => $user_ok[0]->nome
 					);
 					//inicializa session
 					$this->session->set_userdata($session);

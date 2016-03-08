@@ -32,7 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <div class="col-md-3">
         <div class="page-header">
           <h1><?php echo $this->session->userdata('rfid') ?> 
-            <small> <?php echo $user_ok->nome ?> </small></h1>
+            <small> <?php echo $this->session->userdata('userName') ?> </small></h1>
         </div>
         
         <ul class="nav nav-pills nav-stacked">
