@@ -73,6 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                           <option value="Maria">Maria</option>
                           <option value="Inácio">Inacio</option>
                       </select>
+                        <button type="submit" class="btn btn-default">Atribuir</button>
                     </div>
                   </form>
                 </div>
@@ -84,25 +85,52 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <!-- Default panel contents -->
                 <div class="panel-heading">Cadastro de Usuários</div>
                 <div class="panel-body">
-                  <form>
+                  <form action="<?php echo site_url("cadastro/insert");?>" method="POST"> <!--FIXME Adicionar action p/ controller-->
                     <div class="form-group">
-                      <label for="exampleInputEmail1">Nome</label>
-                      <input type="text" value="<?php if($action === "edit_user") echo $nomeUser?>" class="form-control" id="exampleInputEmail1" placeholder="Nome">
+                      <label for="foto">Foto</label>
+                      <input type="file" name="foto" id="exampleInputFile">
+                      <p class="help-block">Escolha uma imagem nos formatos jpg/png.</p>
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputEmail1">E-mail</label>
-                      <input type="email" value="<?php if($action === "edit_user") echo $emailUser?>" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                      <label for="nome">CPF</label>
+                      <input type="text" name="cpf" value="<?php if($action === "edit_user") echo $cpfUser?>" class="form-control" id="cpf" placeholder="CPF">
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputPassword1">Password</label>
-                      <input type="password" value=" <?php if($action === "edit_user") echo $pwdUser?> "class="form-control" id="exampleInputPassword1" placeholder="Password">
+                      <label for="nome">Nome</label>
+                      <input type="text" name="nome" value="<?php if($action === "edit_user") echo $nomeUser?>" class="form-control" id="nome" placeholder="Nome">
+                    </div>
+                    <div class="form-group">
+                      <label for="email">E-mail</label>
+                      <input type="email" name="email" value="<?php if($action === "edit_user") echo $emailUser?>" class="form-control" id="email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                      <label for="senha">Password</label>
+                      <input type="password" name="senha" value=" <?php if($action === "edit_user") echo $pwdUser?> "class="form-control" id="senha" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                      <label for="end">Endereço</label>
+                      <input type="text" name="endereco" value="<?php if($action === "edit_user") echo $enderecoUser?>" class="form-control" id="endereco" placeholder="Endereço">
+                    </div>
+                    <div class="form-group">
+                      <label for="end">Telefone</label>
+                      <input type="text" name="telefone" value="<?php if($action === "edit_user") echo $telefoneUser?>" class="form-control" id="telefone" placeholder="Telefone">
+                    </div>
+                    <div>
+                      Departamento:
+                      <select name="dpto">
+                          <option value="Compras">Compras</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Operacional">Operacional</option>
+                          <option value="Administração">Administração</option>
+                      </select>
                     </div>
                     <div class="checkbox">
                       <label>
-                        <input type="checkbox" <?php if($action === "edit_user" && $isAdminUser === TRUE) echo "checked"?> > Administrador
+                        <input type="checkbox" name="isAdmin" value="1"
+                        <?php if($action === "edit_user" && $isAdminUser === TRUE) echo "checked"?> > Administrador
                       </label>
                     </div>
-                    <button type="submit" class="btn btn-default">Salvar</button>
+                      <button type="submit" class="btn btn-default">Salvar</button>
                   </form>
                 </div>
             

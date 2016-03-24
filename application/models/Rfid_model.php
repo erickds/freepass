@@ -5,9 +5,9 @@ class Rfid_model extends CI_Model {
 	public function check_rfid($rfid)
 	{
 		//select * from rfid
-		$this->db->from('rfid');
+		$this->db->from('rfid r');
 		//where id = $rfid
-		$this->db->where('id',$rfid);
+		$this->db->where('r.rfid',$rfid);
 		//roda query
 		$rfids_ok = $this->db->get();
 
