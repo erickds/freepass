@@ -83,7 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           
               <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Cadastro de Usuários</div>
+                <div class="panel-heading">Cadastro de Usuário</div>
                 <div class="panel-body">
                   <form action="<?php echo site_url("cadastro/insert");?>" method="POST"> <!--FIXME Adicionar action p/ controller-->
                     <div class="form-group">
@@ -118,16 +118,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div>
                       Departamento:
                       <select name="dpto">
-                          <option value="Compras">Compras</option>
-                          <option value="Marketing">Marketing</option>
-                          <option value="Operacional">Operacional</option>
-                          <option value="Administração">Administração</option>
+                          <option value="1" <?php if($action === "edit_user" && $dptoUser=="1") echo "selected=\"selected\""?> >Compras</option>
+                          <option value="2" <?php if($action === "edit_user" && $dptoUser=="2") echo "selected=\"selected\""?> >Marketing</option>
+                          <option value="3" <?php if($action === "edit_user" && $dptoUser=="3") echo "selected=\"selected\""?>>Operacional</option>
+                          <option value="4" <?php if($action === "edit_user" && $dptoUser=="4") echo "selected=\"selected\""?> >Administração</option>
                       </select>
                     </div>
                     <div class="checkbox">
                       <label>
                         <input type="checkbox" name="isAdmin" value="1"
-                        <?php if($action === "edit_user" && $isAdminUser === TRUE) echo "checked"?> > Administrador
+                        <?php if($action === "edit_user" && $isAdminUser === "1") echo "checked"?> > Administrador
                       </label>
                     </div>
                       <button type="submit" class="btn btn-default">Salvar</button>
