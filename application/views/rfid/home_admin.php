@@ -133,7 +133,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   </table>
                 </div>
                 <?php }else if($action === "logs") {?>
-                LOGS
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Horário</th>
+                        <th>Evento</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          12:01:23
+                        </td>
+                        <td>
+                          Usuário Erick entrou na porta.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          13:45:02
+                        </td>
+                        <td>
+                          Administrador Erick cadastrou um usuário.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          18:00:01
+                        </td>
+                        <td>
+                          Tentativa de acesso com o RFID 456456465 (NEGADO), enviado para cadastro.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 <?php }?>
               </div>
             </div>
