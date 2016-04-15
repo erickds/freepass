@@ -34,6 +34,21 @@ class Admin_model extends CI_Model {
 		}
 		
 	}
+	public function select_user_cpf($cpf)
+	{
+		//select * from pessoa
+		$this->db->from('Pessoa p');
+		$this->db->where('p.cpf', $cpf);
+		//setando query
+		$user_ok = $this->db->get();
+		if($user_ok->num_rows()){
+			//Executa a query e retorna para controller Admin o array com o usuário.
+			return $user_ok->result();
+		}else{
+			return FALSE;
+		}
+		
+	}
 	public function list_users()
 	{
 		//select * from pessoa

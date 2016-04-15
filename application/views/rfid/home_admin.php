@@ -141,30 +141,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>
-                          12:01:23
-                        </td>
-                        <td>
-                          Usuário Erick entrou na porta.
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          13:45:02
-                        </td>
-                        <td>
-                          Administrador Erick cadastrou um usuário.
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          18:00:01
-                        </td>
-                        <td>
-                          Tentativa de acesso com o RFID 456456465 (NEGADO), enviado para cadastro.
-                        </td>
-                      </tr>
+                      <?php
+                        foreach($logs as $log){
+                          echo "<tr><td>";
+                          echo $log->data;
+                          echo"</td><td>";
+                          echo $log->mensagem;
+                          echo "</td></tr>";
+                        }
+                      ?>
                     </tbody>
                   </table>
                 <?php }?>

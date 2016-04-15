@@ -78,8 +78,10 @@ class Admin extends CI_Controller {
 	}
 	public function logs()
 	{
+		$logs = $this->listarLogs();
 		$dados = array(
-			"action" => "logs"
+			"action" => "logs",
+			"logs" => $logs
 			);
 		$this->load->view('rfid/home_admin',$dados);
 	}
@@ -133,5 +135,10 @@ class Admin extends CI_Controller {
 		$this->load->model('Admin_model');
 		//valida no banco e recebe Array com o usuário
 		return $this->Admin_model->list_rfid_users();
+	}
+	public function listarLogs(){
+		$this->load->model('Log_model');
+		//valida no banco e recebe Array com o usuário
+		return $this->Log_model->list_logs();
 	}
 }

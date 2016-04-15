@@ -6,14 +6,52 @@ class Rfid_model extends CI_Model {
 	{
 		//select * from rfid
 		$this->db->from('rfid r');
-		//where id = $rfid
+		//join Pessoa p on r.id_pessoa=p.id
+		$this->db->join('Pessoa p', 'r.id_pessoa=p.id', 'left');
+		//setando query
 		$this->db->where('r.rfid',$rfid);
-		//roda query
-		$rfids_ok = $this->db->get();
 
-		if($rfids_ok->num_rows()){
-			$rfid_ok = $rfids_ok->result_array();
-			return $rfid_ok;
+		$user_ok = $this->db->get();
+		if($user_ok->num_rows()){
+			//Executa a query e retorna para controller Admin o array com os usuários.
+			return $user_ok->result();
+		}else{
+			return FALSE;
+		}
+	}
+	public function check_rfid_exists($rfid)
+	{
+		//select * from rfid
+		$this->db->from('rfid');
+		$this->db->where('rfid',$rfid);
+
+		$user_ok = $this->db->get();
+		if($user_ok->num_rows()){
+			//Executa a query e retorna para controller Admin o array com os usuários.
+			return $user_ok->result();
+		}else{
+			return FALSE;
+		}
+	}
+	public function check_rfid_pendente($rfid)
+	{
+		//select * from rfid
+		$this->db->from('pendentes');
+		$this->db->where('rfid',$rfid);
+
+		$user_ok = $this->db->get();
+		if($user_ok->num_rows()){
+			//Executa a query e retorna para controller Admin o array com os usuários.
+			return $user_ok->result();
+		}else{
+			return FALSE;
+		}
+	}
+	public function insert_rfid_pendente($rfid)
+	{
+		$this->load->model('_model');
+		if($this->User_model->insert($user)){
+			return TRUE;
 		}else{
 			return FALSE;
 		}

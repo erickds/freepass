@@ -19,6 +19,7 @@ class Cadastro extends CI_Controller {
 		else
 			$isAdmin = 0;
 		$user = array(
+		   'cpf' => $cpf,
 		   'nome' => $nome,
 		   'email' => $email,
 		   'senha' => $senha,
@@ -26,13 +27,21 @@ class Cadastro extends CI_Controller {
 		   'telefone' => $telefone,
 		   'endereco' => $endereco,
 		   'dpto' => $dpto,
-		   'cpf' => $cpf,
 		   'isAdmin' => $isAdmin
 		);
 
 		$this->load->model('User_model');
 		$result = $this->User_model->insert($user);
+		if($result){
+			$dados = array(
+				"alerta" => "Operação realizada com sucesso!"
+			);
+		}else{
+			$dados = array(
+				"alerta" => "Houve um erro ao tentar realizar esta operação"
+			);
+		}
 
-		
+		redirect('/admin/home', 'refresh');
 	}
 }
