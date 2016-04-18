@@ -11,10 +11,10 @@ class Rfid_model extends CI_Model {
 		//setando query
 		$this->db->where('r.rfid',$rfid);
 
-		$user_ok = $this->db->get();
-		if($user_ok->num_rows()){
+		$res_ok = $this->db->get();
+		if($res_ok->num_rows()){
 			//Executa a query e retorna para controller Admin o array com os usuários.
-			return $user_ok->result();
+			return $res_ok->result();
 		}else{
 			return FALSE;
 		}
@@ -25,10 +25,38 @@ class Rfid_model extends CI_Model {
 		$this->db->from('rfid');
 		$this->db->where('rfid',$rfid);
 
-		$user_ok = $this->db->get();
-		if($user_ok->num_rows()){
+		$res_ok = $this->db->get();
+		if($res_ok->num_rows()){
 			//Executa a query e retorna para controller Admin o array com os usuários.
-			return $user_ok->result();
+			return $res_ok->result();
+		}else{
+			return FALSE;
+		}
+	}
+	public function check_pin_exists($pin)
+	{
+		//select * from rfid
+		$this->db->from('pendentes');
+		$this->db->where('pin',$pin);
+
+		$res_ok = $this->db->get();
+		if($res_ok->num_rows()){
+			//Executa a query e retorna para controller Admin o array com os usuários.
+			return $res_ok->result();
+		}else{
+			return FALSE;
+		}
+	}
+	public function select_pin($rfid)
+	{
+		//select * from rfid
+		$this->db->from('pendentes');
+		$this->db->where('rfid',$rfid);
+
+		$res_ok = $this->db->get();
+		if($res_ok->num_rows()){
+			//Executa a query e retorna para controller Admin o array com os usuários.
+			return $res_ok->result();
 		}else{
 			return FALSE;
 		}
@@ -39,18 +67,26 @@ class Rfid_model extends CI_Model {
 		$this->db->from('pendentes');
 		$this->db->where('rfid',$rfid);
 
-		$user_ok = $this->db->get();
-		if($user_ok->num_rows()){
+		$res_ok = $this->db->get();
+		if($res_ok->num_rows()){
 			//Executa a query e retorna para controller Admin o array com os usuários.
-			return $user_ok->result();
+			return $res_ok->result();
 		}else{
 			return FALSE;
 		}
 	}
-	public function insert_rfid_pendente($rfid)
+	public function insert_rfid_pendente($rfid_pendente)
 	{
-		$this->load->model('_model');
-		if($this->User_model->insert($user)){
+		if($this->db->insert('pendentes', $rfid_pendente)){
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+	}
+	public function insert_rfid($rfid)
+	{
+		$this->db->insert('pendentes', $rfid);
+		if($this->Rfid_model->insert($rfid)){
 			return TRUE;
 		}else{
 			return FALSE;
