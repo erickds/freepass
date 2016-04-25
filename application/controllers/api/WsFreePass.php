@@ -128,7 +128,7 @@ class WsFreePass extends REST_Controller {
            'data' => date("Y-m-d H:i:s"),
            'rfid' => $rfid
         );
-        $this->set_response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
+        $this->set_response($message, ""); // CREATED (201) being the HTTP response code
     }
 
 }
