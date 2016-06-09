@@ -34,8 +34,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   				<?php } ?>
   				<form action="<?php echo base_url('admin');?>" method="POST">
   				  <div class="form-group">
-  				    <label for="rfid">RFID:</label>
-  				    <input type="text" class="form-control" name="rfid" id="rfid" placeholder="000000000">
+  				    <label for="email">E-Mail:</label>
+  				    <input type="text" class="form-control" name="email" id="email">
+                                    <label for="password">Senha:</label>
+  				    <input type="password" class="form-control" name="password" id="password">
   				  </div>
   				  <button type="submit" name="entrar" value="entrar" class="btn btn-success">Entrar</button>
   				</form>
