@@ -1,109 +1,108 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Rfid extends CI_Controller {
-	public function entrar(){
-		$alerta = null;
-		if($this->input->post('entrar')==="entrar"){
-			$this->form_validation->set_rules('rfid','RFID','required|numeric|exact_length[9]');
-			
-			if($this->form_validation->run() === TRUE){
-				
-				$this->load->model('Rfid_model');
 
-				$rfid = $this->input->post('rfid');
+    public function entrar() {
+        $alerta = null;
+        if ($this->input->post('entrar') === "entrar") {
+            $this->form_validation->set_rules('rfid', 'RFID', 'required|numeric|exact_length[9]');
 
-				
-				//valida no banco
-				$rfid_ok = $this->Rfid_model->check_rfid($rfid);
+            if ($this->form_validation->run() === TRUE) {
 
-				if($rfid_ok){
-					//configura session
-					$session = array(
-						'rfid' => $rfid,
-						'permitido' => TRUE
-					);
-					//inicializa session
-					$this->session->set_userdata($session);
+                $this->load->model('Rfid_model');
 
-					redirect('home');
+                $rfid = $this->input->post('rfid');
 
-				}else{
-				$alerta = array(
-						"class" => "danger",
-						"mensagem" => "Erro, RFID não permitida<br>"
-					);	
-				}
 
-			}else{
+                //valida no banco
+                $user_rfid = $this->Rfid_model->check_rfid($rfid);
 
-				$alerta = array(
-						"class" => "danger",
-						"mensagem" => "Atenção, erro na entrada!<br>". validation_errors()
-					);
-			}
-		}
+                if ($user_rfid) {
+                    //configura session
+                    $session = array(
+                        'nome' => $user_rfid[0]->nome,
+                        'rfid' => $user_rfid[0]->rfid,
+                        'foto' => $user_rfid[0]->foto,
+                        'permitido' => TRUE
+                    );
+                    //inicializa session
+                    $this->session->set_userdata($session);
 
-		$dados = array(
-			"alerta" => $alerta
-			);
+                    redirect('home');
+                } else {
+                    $alerta = array(
+                        "class" => "danger",
+                        "mensagem" => "Erro, RFID não permitida<br>"
+                    );
+                }
+            } else {
 
-		$this->load->view('rfid/entrar',$dados);
-	}
+                $alerta = array(
+                    "class" => "danger",
+                    "mensagem" => "Atenção, erro na entrada!<br>" . validation_errors()
+                );
+            }
+        }
 
-	public function sair()
-	{
-		$this->session->sess_destroy();
-		redirect('rfid/entrar');
-	}
-        
-        public function pre_cadastro(){
-		$alerta = null;
-		if($this->input->post('entrar')==="entrar"){
-			$this->form_validation->set_rules('rfid','RFID','required|numeric|exact_length[9]');
-			
-			if($this->form_validation->run() === TRUE){
-				
-				$this->load->model('Rfid_model');
+        $dados = array(
+            "alerta" => $alerta
+        );
 
-				$rfid = $this->input->post('rfid');
+        $this->load->view('rfid/entrar', $dados);
+    }
 
-				
-				//valida no banco
-				$rfid_ok = $this->Rfid_model->check_rfid($rfid);
+    public function sair() {
+        $this->session->sess_destroy();
+        redirect('rfid/entrar');
+    }
 
-				if($rfid_ok){
-					//configura session
-					$session = array(
-						'rfid' => $rfid,
-						'permitido' => TRUE
-					);
-					//inicializa session
-					$this->session->set_userdata($session);
+    public function pre_cadastro() {
+        $alerta = null;
+        if ($this->input->post('entrar') === "entrar") {
+            $this->form_validation->set_rules('rfid', 'RFID', 'required|numeric|exact_length[9]');
 
-					redirect('home');
+            if ($this->form_validation->run() === TRUE) {
 
-				}else{
-				$alerta = array(
-						"class" => "danger",
-						"mensagem" => "Erro, RFID não permitida<br>"
-					);	
-				}
+                $this->load->model('Rfid_model');
 
-			}else{
+                $rfid = $this->input->post('rfid');
 
-				$alerta = array(
-						"class" => "danger",
-						"mensagem" => "Atenção, erro na entrada!<br>". validation_errors()
-					);
-			}
-		}
 
-		$dados = array(
-			"alerta" => $alerta
-			);
+                //valida no banco
+                $rfid_ok = $this->Rfid_model->check_rfid($rfid);
 
-		$this->load->view('rfid/pre-cadastro',$dados);
-	}
+                if ($rfid_ok) {
+                    //configura session
+                    $session = array(
+                        'rfid' => $rfid,
+                        'permitido' => TRUE
+                    );
+                    //inicializa session
+                    $this->session->set_userdata($session);
+
+                    redirect('home');
+                } else {
+                    $alerta = array(
+                        "class" => "danger",
+                        "mensagem" => "Erro, RFID não permitida<br>"
+                    );
+                }
+            } else {
+
+                $alerta = array(
+                    "class" => "danger",
+                    "mensagem" => "Atenção, erro na entrada!<br>" . validation_errors()
+                );
+            }
+        }
+
+        $dados = array(
+            "alerta" => $alerta
+        );
+
+        $this->load->view('rfid/pre-cadastro', $dados);
+    }
 
 }
