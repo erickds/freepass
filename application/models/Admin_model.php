@@ -75,6 +75,20 @@ class Admin_model extends CI_Model {
             return FALSE;
         }
     }
+    
+    public function select_feriado_by_date($date) {
+        //select * from pessoa
+        $this->db->from('Feriados f');
+        $this->db->where('f.data', $date);
+        //setando query
+        $user_ok = $this->db->get();
+        if ($user_ok->num_rows()) {
+            //Executa a query e retorna para controller Admin o array com o usuário.
+            return $user_ok->result();
+        } else {
+            return FALSE;
+        }
+    }
 
     public function select_user_cpf($cpf) {
         //select * from pessoa
@@ -310,8 +324,60 @@ class Admin_model extends CI_Model {
         }
     }
 
+    public function delete_horario($id) {
+        //select * from pessoa
+        $this->db->from("Horarios");
+        $this->db->where("idhorario", $id);
+        //setando query
+
+        if ($this->db->delete()) {
+            //Executa a query e retorna para controller Admin o array com o usuário.
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function delete_periodo($id) {
+        //select * from pessoa
+        $this->db->from("Periodos");
+        $this->db->where("idperiodo", $id);
+        //setando query
+
+        if ($this->db->delete()) {
+            //Executa a query e retorna para controller Admin o array com o usuário.
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function delete_feriado($id) {
+        //select * from pessoa
+        $this->db->from("Feriados");
+        $this->db->where("idferiado", $id);
+        //setando query
+
+        if ($this->db->delete()) {
+            //Executa a query e retorna para controller Admin o array com o usuário.
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
     public function delete_rfid_pendente($rfid) {
         $this->db->from("Pendentes");
+        $this->db->where('rfid', $rfid);
+        if ($this->db->delete()) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function delete_rfid($rfid) {
+        $this->db->from("Rfid");
         $this->db->where('rfid', $rfid);
         if ($this->db->delete()) {
             return TRUE;
@@ -329,7 +395,7 @@ class Admin_model extends CI_Model {
             return FALSE;
         }
     }
-    
+
     public function delete_periodo_horario($idPeriodo) {
         $this->db->from("Periodo_Horario");
         $this->db->where('idPeriodo', $idPeriodo);

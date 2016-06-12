@@ -27,6 +27,7 @@ class WsFreePass extends REST_Controller {
         $log = null;
         $this->load->helper('date');
         $this->load->model('Rfid_model');
+        $this->load->model('Admin_model');
         $rfid = $this->input->get('id');
         // se for cadastro inserido pelo master
         if ($this->input->get('masterCad') == 1) {
@@ -50,19 +51,32 @@ class WsFreePass extends REST_Controller {
             //valida no banco se há rfid atrelado a um usuário e master, para cadastrar ou liberar entrada
             $rfid_ok = $this->Rfid_model->check_rfid($rfid);
             if ($rfid_ok) {
-                if ($rfid_ok[0]->isActive == 1) {
-                    // se for master, retornar m para o arduino para efetuar cadastro
-                    if ($rfid_ok[0]->isMaster == 1) {
-                        $message = [
-                            'v' => 'm'
-                        ];
-                        $log = array(
-                            'data' => date("Y-m-d H:i:s"),
-                            'id_pessoa' => $rfid_ok[0]->id,
-                            'id_cartao' => $rfid,
-                            'mensagem' => "Usuário " . $rfid_ok[0]->nome . " logou/entrou com o RFID:" . $rfid
-                        );
-                    } else {
+                $pessoa_periodos = $this->Admin_model->list_pessoa_periodo($rfid_ok[0]->id);
+                if ($pessoa_periodos) {
+                    $acesso = 0;
+                    $id_horarios = array();
+                    foreach ($pessoa_periodos as $pessoa_periodo) {
+                        $periodo = $this->Admin_model->select_periodo($pessoa_periodo->idPeriodo);
+                        if (date("Y-m-d", now()) >= date("Y-m-d", strtotime($periodo[0]->datainicio)) && date("Y-m-d", now()) <= date("Y-m-d", strtotime($periodo[0]->datafim))) {
+                            //período valido
+                            $periodo_horarios = $this->Admin_model->list_periodo_horario($periodo[0]->idperiodo);
+                            if ($periodo_horarios) {
+                                foreach ($periodo_horarios as $periodo_horario) {
+                                    $horario = $this->Admin_model->select_horario($periodo_horario->idHorario);
+                                    if (date("H-i", now()) >= date("H-i", strtotime($horario[0]->horainicio)) && date("H-i", now()) <= date("H-i", strtotime($horario[0]->horafim))) {
+                                        if ($this->Admin_model->select_feriado_by_date(date("Y-m-d", now()))) {
+                                            if ($periodo[0]->feriadoAtivo) {
+                                                $acesso = 1;
+                                            }
+                                        } else {
+                                            $acesso = 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ($rfid_ok[0]->isActive == 1 && $acesso) {
                         //se não for master, retornar t para arduino liberar entrada
                         $message = [
                             'v' => 't'
@@ -73,18 +87,54 @@ class WsFreePass extends REST_Controller {
                             'id_cartao' => $rfid,
                             'mensagem' => "Usuário " . $rfid_ok[0]->nome . " logou/entrou com o RFID:" . $rfid
                         );
+                    } else {
+                        $message = [
+                            'v' => 'f'
+                        ];
+                        $log = array(
+                            'data' => date("Y-m-d H:i:s"),
+                            'id_pessoa' => $rfid_ok[0]->id,
+                            'id_cartao' => $rfid,
+                            'mensagem' => "Usuário " . $rfid_ok[0]->nome . " tentou logar/entrar com o um cartão bloqueado RFID:" . $rfid
+                        );
                     }
-                    //se não for ativo, retorna f para indicar acesso bloquado
                 } else {
-                    $message = [
-                        'v' => 'f'
-                    ];
-                    $log = array(
-                        'data' => date("Y-m-d H:i:s"),
-                        'id_pessoa' => $rfid_ok[0]->id,
-                        'id_cartao' => $rfid,
-                        'mensagem' => "Usuário " . $rfid_ok[0]->nome . " tentou logar/entrar com o um cartão bloqueado RFID:" . $rfid
-                    );
+                    if ($rfid_ok[0]->isActive == 1) {
+                        // se for master, retornar m para o arduino para efetuar cadastro
+                        if ($rfid_ok[0]->isMaster == 1) {
+                            $message = [
+                                'v' => 'm'
+                            ];
+                            $log = array(
+                                'data' => date("Y-m-d H:i:s"),
+                                'id_pessoa' => $rfid_ok[0]->id,
+                                'id_cartao' => $rfid,
+                                'mensagem' => "Usuário " . $rfid_ok[0]->nome . " logou/entrou com o RFID:" . $rfid
+                            );
+                        } else {
+                            //se não for master, retornar t para arduino liberar entrada
+                            $message = [
+                                'v' => 't'
+                            ];
+                            $log = array(
+                                'data' => date("Y-m-d H:i:s"),
+                                'id_pessoa' => $rfid_ok[0]->id,
+                                'id_cartao' => $rfid,
+                                'mensagem' => "Usuário " . $rfid_ok[0]->nome . " logou/entrou com o RFID:" . $rfid
+                            );
+                        }
+                        //se não for ativo, retorna f para indicar acesso bloquado
+                    } else {
+                        $message = [
+                            'v' => 'f'
+                        ];
+                        $log = array(
+                            'data' => date("Y-m-d H:i:s"),
+                            'id_pessoa' => $rfid_ok[0]->id,
+                            'id_cartao' => $rfid,
+                            'mensagem' => "Usuário " . $rfid_ok[0]->nome . " tentou logar/entrar com o um cartão bloqueado RFID:" . $rfid
+                        );
+                    }
                 }
             } else if ($this->Rfid_model->check_rfid_exists($rfid)) { //não está permitido mas existe
                 $message = [
@@ -143,6 +193,7 @@ class WsFreePass extends REST_Controller {
         $log = null;
         $this->load->helper('date');
         $this->load->model('Rfid_model');
+        $this->load->model('Admin_model');
         $rfid = $this->input->get('id');
         // se for cadastro inserido pelo master
         if ($this->input->get('masterCad') == 1) {
@@ -166,19 +217,32 @@ class WsFreePass extends REST_Controller {
             //valida no banco se há rfid atrelado a um usuário e master, para cadastrar ou liberar entrada
             $rfid_ok = $this->Rfid_model->check_rfid($rfid);
             if ($rfid_ok) {
-                if ($rfid_ok[0]->isActive == 1) {
-                    // se for master, retornar m para o arduino para efetuar cadastro
-                    if ($rfid_ok[0]->isMaster == 1) {
-                        $message = [
-                            'v' => 'm'
-                        ];
-                        $log = array(
-                            'data' => date("Y-m-d H:i:s"),
-                            'id_pessoa' => $rfid_ok[0]->id,
-                            'id_cartao' => $rfid,
-                            'mensagem' => "Usuário " . $rfid_ok[0]->nome . " logou/entrou com o RFID:" . $rfid
-                        );
-                    } else {
+                $pessoa_periodos = $this->Admin_model->list_pessoa_periodo($rfid_ok[0]->id);
+                if ($pessoa_periodos) {
+                    $acesso = 0;
+                    $id_horarios = array();
+                    foreach ($pessoa_periodos as $pessoa_periodo) {
+                        $periodo = $this->Admin_model->select_periodo($pessoa_periodo->idPeriodo);
+                        if (date("Y-m-d", now()) >= date("Y-m-d", strtotime($periodo[0]->datainicio)) && date("Y-m-d", now()) <= date("Y-m-d", strtotime($periodo[0]->datafim))) {
+                            //período valido
+                            $periodo_horarios = $this->Admin_model->list_periodo_horario($periodo[0]->idperiodo);
+                            if ($periodo_horarios) {
+                                foreach ($periodo_horarios as $periodo_horario) {
+                                    $horario = $this->Admin_model->select_horario($periodo_horario->idHorario);
+                                    if (date("H-i", now()) >= date("H-i", strtotime($horario[0]->horainicio)) && date("H-i", now()) <= date("H-i", strtotime($horario[0]->horafim))) {
+                                        if ($this->Admin_model->select_feriado_by_date(date("Y-m-d", now()))) {
+                                            if ($periodo[0]->feriadoAtivo) {
+                                                $acesso = 1;
+                                            }
+                                        } else {
+                                            $acesso = 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ($rfid_ok[0]->isActive == 1 && $acesso) {
                         //se não for master, retornar t para arduino liberar entrada
                         $message = [
                             'v' => 't'
@@ -189,18 +253,54 @@ class WsFreePass extends REST_Controller {
                             'id_cartao' => $rfid,
                             'mensagem' => "Usuário " . $rfid_ok[0]->nome . " logou/entrou com o RFID:" . $rfid
                         );
+                    } else {
+                        $message = [
+                            'v' => 'f'
+                        ];
+                        $log = array(
+                            'data' => date("Y-m-d H:i:s"),
+                            'id_pessoa' => $rfid_ok[0]->id,
+                            'id_cartao' => $rfid,
+                            'mensagem' => "Usuário " . $rfid_ok[0]->nome . " tentou logar/entrar com o um cartão bloqueado RFID:" . $rfid
+                        );
                     }
-                    //se não for ativo, retorna f para indicar acesso bloquado
                 } else {
-                    $message = [
-                        'v' => 'f'
-                    ];
-                    $log = array(
-                        'data' => date("Y-m-d H:i:s"),
-                        'id_pessoa' => $rfid_ok[0]->id,
-                        'id_cartao' => $rfid,
-                        'mensagem' => "Usuário " . $rfid_ok[0]->nome . " tentou logar/entrar com o um cartão bloqueado RFID:" . $rfid
-                    );
+                    if ($rfid_ok[0]->isActive == 1) {
+                        // se for master, retornar m para o arduino para efetuar cadastro
+                        if ($rfid_ok[0]->isMaster == 1) {
+                            $message = [
+                                'v' => 'm'
+                            ];
+                            $log = array(
+                                'data' => date("Y-m-d H:i:s"),
+                                'id_pessoa' => $rfid_ok[0]->id,
+                                'id_cartao' => $rfid,
+                                'mensagem' => "Usuário " . $rfid_ok[0]->nome . " logou/entrou com o RFID:" . $rfid
+                            );
+                        } else {
+                            //se não for master, retornar t para arduino liberar entrada
+                            $message = [
+                                'v' => 't'
+                            ];
+                            $log = array(
+                                'data' => date("Y-m-d H:i:s"),
+                                'id_pessoa' => $rfid_ok[0]->id,
+                                'id_cartao' => $rfid,
+                                'mensagem' => "Usuário " . $rfid_ok[0]->nome . " logou/entrou com o RFID:" . $rfid
+                            );
+                        }
+                        //se não for ativo, retorna f para indicar acesso bloquado
+                    } else {
+                        $message = [
+                            'v' => 'f'
+                        ];
+                        $log = array(
+                            'data' => date("Y-m-d H:i:s"),
+                            'id_pessoa' => $rfid_ok[0]->id,
+                            'id_cartao' => $rfid,
+                            'mensagem' => "Usuário " . $rfid_ok[0]->nome . " tentou logar/entrar com o um cartão bloqueado RFID:" . $rfid
+                        );
+                    }
                 }
             } else if ($this->Rfid_model->check_rfid_exists($rfid)) { //não está permitido mas existe
                 $message = [

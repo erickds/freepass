@@ -36,6 +36,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <small style="margin:auto"><?php echo $this->session->userdata('rfid') ?></small>
                                 </h1>
                             </div>
+                            <div style="text-align: center">
+                                <a href="<?php echo base_url() ?>home/dados">Meus Dados</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="<?php echo base_url() ?>home/cartoes">Meus Cartões</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="<?php echo base_url() ?>home/logs">Meus Acessos</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="<?php echo base_url() ?>home/sair">Sair</a>
+                            </div>
                         </div>
                     </div>
                 </div>

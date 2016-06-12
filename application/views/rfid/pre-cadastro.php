@@ -32,7 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="row">
                 <div class="col-md-offset-2 col-md-8" >
                     <div>
-                        <a class="btn btn-default" href="home" role="button">
+                        <a class="btn btn-default" href="../" role="button">
                             Voltar</a>
                     </div><br>
                     <div class="panel panel-default">

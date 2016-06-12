@@ -30,7 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                  background-image: url('<?php echo base_url($this->session->userdata('foto')) ?>')">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             <h1 style="margin: auto">
                                 <small> <?php echo $this->session->userdata('userName') ?> </small></h1>
                             <div><a href="./sair">Sair</a></div>
@@ -143,11 +143,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 <label for="nome">CPF</label>
                                                 <input type="text" name="cpf" value="<?php
                                                 if ($action === "edit_user") {
-                                                    echo $cpfUser . "\" readonly";
+                                                    echo $cpfUser;
                                                 } else {
                                                     echo "\"";
                                                 }
-                                                ?>" class="form-control" id="cpf" placeholder="CPF">
+                                                ?>" <?php
+                                                       if ($action === "edit_user") {
+                                                           echo "readonly";
+                                                       }
+                                                       ?> class="form-control" id="cpf" placeholder="CPF">
                                             </div>
                                         </div>
                                         <div class="col-md-8 form-group">
@@ -194,7 +198,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 <br>
                                                 <label>
                                                     <input type="checkbox" name="isAdmin" value="1"
-                                                           <?php if ($action === "edit_user" && $isAdminUser === "1") echo "checked" ?> > Administrador
+        <?php if ($action === "edit_user" && $isAdminUser === "1") echo "checked" ?> > Administrador
                                                 </label>
                                             </div>
                                         </div>
@@ -203,7 +207,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 <br>
                                                 <label>
                                                     <input type="checkbox" name="isActive" value="1"
-                                                           <?php if ($action === "edit_user" && $isActive === "1") echo "checked" ?> > Usuário Ativo
+        <?php if ($action === "edit_user" && $isActive === "1") echo "checked" ?> > Usuário Ativo
                                                 </label>
                                             </div>
                                         </div>
@@ -217,35 +221,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                                 <b>Períodos</b>
                                                             </div>
                                                             <?php
-                                                            foreach ($periodos as $periodo) {
-                                                                if ($pessoa_periodos) {
-                                                                    ?>
-                                                                    <div class = "col-md-2">
-                                                                        <label class = "checkbox-inline">
-                                                                            <input type = "checkbox" 
-                                                                                   name = "<?php echo $periodo->nome ?>" 
-                                                                                   value = "<?php echo $periodo->idperiodo ?>" 
-                                                                                   <?php
-                                                                                   if (in_array($periodo->idperiodo, $pessoa_periodos)) {
-                                                                                       echo "checked";
-                                                                                   }
-                                                                                   ?>
-                                                                                   />
-                                                                                   <?php echo $periodo->nome; ?>
-                                                                        </label>
-                                                                    </div>
-                                                                <?php } else {
-                                                                    ?>
-                                                                    <div class = "col-md-2">
-                                                                        <label class = "checkbox-inline">
-                                                                            <input type = "checkbox" 
-                                                                                   name = "<?php echo $periodo->nome ?>" 
-                                                                                   value = "<?php echo $periodo->idperiodo ?>" 
-                                                                                   />
-                                                                                   <?php echo $periodo->nome; ?>
-                                                                        </label>
-                                                                    </div>
-                                                                    <?php
+                                                            if ($periodos) {
+                                                                foreach ($periodos as $periodo) {
+                                                                    if ($pessoa_periodos) {
+                                                                        ?>
+                                                                        <div class = "col-md-2">
+                                                                            <label class = "checkbox-inline">
+                                                                                <input type = "checkbox" 
+                                                                                       name = "<?php echo $periodo->nome ?>" 
+                                                                                       value = "<?php echo $periodo->idperiodo ?>" 
+                                                                                       <?php
+                                                                                       if (in_array($periodo->idperiodo, $pessoa_periodos)) {
+                                                                                           echo "checked";
+                                                                                       }
+                                                                                       ?>
+                                                                                       />
+                                                                        <?php echo $periodo->nome; ?>
+                                                                            </label>
+                                                                        </div>
+                <?php } else {
+                    ?>
+                                                                        <div class = "col-md-2">
+                                                                            <label class = "checkbox-inline">
+                                                                                <input type = "checkbox" 
+                                                                                       name = "<?php echo $periodo->nome ?>" 
+                                                                                       value = "<?php echo $periodo->idperiodo ?>" 
+                                                                                       />
+                                                                        <?php echo $periodo->nome; ?>
+                                                                            </label>
+                                                                        </div>
+                                                                        <?php
+                                                                    }
                                                                 }
                                                             }
                                                             ?>
@@ -261,7 +267,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </form>
                                 </div>
                             </div>
-                        <?php } else if (($action === "cad_horario") || ($action === "edit_horario")) { ?>
+    <?php } else if (($action === "cad_horario") || ($action === "edit_horario")) { ?>
                             <div>
                                 <a class="btn btn-default" href="horarios" role="button">
                                     Voltar</a>
@@ -299,31 +305,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 <b>Dias da Semana</b><br>
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="seg" value="1"
-                                                           <?php if ($action === "edit_horario" && $seg === "1") echo "checked" ?> > Seg
+        <?php if ($action === "edit_horario" && $seg === "1") echo "checked" ?> > Seg
                                                 </label>
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="ter" value="1"
-                                                           <?php if ($action === "edit_horario" && $ter === "1") echo "checked" ?> > Ter
+        <?php if ($action === "edit_horario" && $ter === "1") echo "checked" ?> > Ter
                                                 </label>
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="qua" value="1"
-                                                           <?php if ($action === "edit_horario" && $qua === "1") echo "checked" ?> > Qua
+        <?php if ($action === "edit_horario" && $qua === "1") echo "checked" ?> > Qua
                                                 </label>
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="qui" value="1"
-                                                           <?php if ($action === "edit_horario" && $qui === "1") echo "checked" ?> > Qui
+        <?php if ($action === "edit_horario" && $qui === "1") echo "checked" ?> > Qui
                                                 </label>
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="sex" value="1"
-                                                           <?php if ($action === "edit_horario" && $sex === "1") echo "checked" ?> > Sex
+        <?php if ($action === "edit_horario" && $sex === "1") echo "checked" ?> > Sex
                                                 </label>
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="sab" value="1"
-                                                           <?php if ($action === "edit_horario" && $sab === "1") echo "checked" ?> > Sáb
+        <?php if ($action === "edit_horario" && $sab === "1") echo "checked" ?> > Sáb
                                                 </label>
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="dom" value="1"
-                                                           <?php if ($action === "edit_horario" && $dom === "1") echo "checked" ?> > Dom
+        <?php if ($action === "edit_horario" && $dom === "1") echo "checked" ?> > Dom
                                                 </label>
                                             </div>
                                             <span class="checkbox col-md-12">
@@ -334,7 +340,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </form>
                                 </div>
                             </div>
-                        <?php }else if (($action === "cad_periodo") || ($action === "edit_periodo")) { ?>
+    <?php }else if (($action === "cad_periodo") || ($action === "edit_periodo")) { ?>
                             <div>
                                 <a class="btn btn-default" href="periodos" role="button">
                                     Voltar</a>
@@ -371,7 +377,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             <div class="col-md-12">
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" name="feriadoAtivo" value="1"
-                                                           <?php if ($action === "edit_periodo" && $feriadoAtivo === "1") echo "checked" ?> > Ativo nos Feriados
+        <?php if ($action === "edit_periodo" && $feriadoAtivo === "1") echo "checked" ?> > Ativo nos Feriados
                                                 </label>
                                             </div>
 
@@ -384,38 +390,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                                     <b>Horários</b>
                                                                 </div>
                                                                 <?php
-                                                                if($horarios)
-                                                                foreach ($horarios as $horario) {
-                                                                    if ($periodo_horarios) {
-                                                                        ?>
-                                                                        <div class = "col-md-3">
-                                                                            <label class = "checkbox-inline">
-                                                                                <input type = "checkbox" 
-                                                                                       name = "<?php echo $horario->nome ?>" 
-                                                                                       value = "<?php echo $horario->idhorario ?>" 
-                                                                                       <?php
-                                                                                       if (in_array($horario->idhorario, $periodo_horarios)) {
-                                                                                           echo "checked";
-                                                                                       }
-                                                                                       ?>
-                                                                                       />
-                                                                                       <?php echo $horario->nome; ?>
-                                                                            </label>
-                                                                        </div>
-                                                                    <?php } else {
-                                                                        ?>
-                                                                        <div class = "col-md-3">
-                                                                            <label class = "checkbox-inline">
-                                                                                <input type = "checkbox" 
-                                                                                       name = "<?php echo $horario->nome ?>" 
-                                                                                       value = "<?php echo $horario->idhorario ?>" 
-                                                                                       />
-                                                                                       <?php echo $horario->nome; ?>
-                                                                            </label>
-                                                                        </div>
-                                                                        <?php
+                                                                if ($horarios)
+                                                                    foreach ($horarios as $horario) {
+                                                                        if ($periodo_horarios) {
+                                                                            ?>
+                                                                            <div class = "col-md-3">
+                                                                                <label class = "checkbox-inline">
+                                                                                    <input type = "checkbox" 
+                                                                                           name = "<?php echo $horario->nome ?>" 
+                                                                                           value = "<?php echo $horario->idhorario ?>" 
+                                                                                           <?php
+                                                                                           if (in_array($horario->idhorario, $periodo_horarios)) {
+                                                                                               echo "checked";
+                                                                                           }
+                                                                                           ?>
+                                                                                           />
+                                                                            <?php echo $horario->nome; ?>
+                                                                                </label>
+                                                                            </div>
+                <?php } else {
+                    ?>
+                                                                            <div class = "col-md-3">
+                                                                                <label class = "checkbox-inline">
+                                                                                    <input type = "checkbox" 
+                                                                                           name = "<?php echo $horario->nome ?>" 
+                                                                                           value = "<?php echo $horario->idhorario ?>" 
+                                                                                           />
+                                                                            <?php echo $horario->nome; ?>
+                                                                                </label>
+                                                                            </div>
+                                                                            <?php
+                                                                        }
                                                                     }
-                                                                }
                                                                 ?>
                                                             </div>
                                                         </div>
@@ -431,7 +437,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </form>
                                 </div>
                             </div>
-                        <?php } else if (($action === "cad_feriado") || ($action === "edit_feriado")) { ?>
+    <?php } else if (($action === "cad_feriado") || ($action === "edit_feriado")) { ?>
                             <div>
                                 <a class="btn btn-default" href="feriados" role="button">
                                     Voltar</a>
@@ -468,7 +474,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </form>
                                 </div>
                             </div>
-                        <?php } ?>
+                    <?php } ?>
                     </div>
                     <?php
                 }

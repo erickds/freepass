@@ -30,7 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                  background-image: url('<?php echo base_url($this->session->userdata('foto')) ?>')">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             <h1 style="margin: auto">
                                 <small> <?php echo $this->session->userdata('userName') ?> </small></h1>
                             <div><a href="./sair">Sair</a></div>
@@ -48,6 +48,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <li role="presentation" class="<?php if ($action === "cartoes") echo "active" ?>"><a href="cartoes?opType=1">Cartões / RFID</a></li>
                             <li role="presentation" class="<?php if ($action === "logs") echo "active" ?>"><a href="logs">Logs</a></li>
                         </ul>
+                        <br>
+                        <b>Estatísticas</b><br>
+                        Acessos Totais: <?php echo $infos['qttyAccessAll'] ?><br>
+                        Acessos Hoje: <?php echo $infos['qttyAccessToday'] ?><br>
+                        Acessos Bloqueados Totais: <?php echo $infos['qttyBlockedAccessAll'] ?><br>
+                        Acessos Bloqueados Hoje: <?php echo $infos['qttyBlockedAccessToday'] ?><br>
                     </div>
                     <div class="col-md-9" >
                         <?php if ($action === "usuarios") { ?>
@@ -149,25 +155,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    foreach ($rfid_users as $user_rfid) {
-                                                        echo "<form action='editarRfid' method='post'>";
-                                                        echo "<tr><td>";
-                                                        echo $user_rfid->rfid;
-                                                        echo"</td><td>";
-                                                        echo $user_rfid->nome;
-                                                        echo "</td><td>";
-                                                        echo $user_rfid->rfidActive;
-                                                        echo "</td><td>" .
-                                                        "<div class='btn-group' role='group' aria-label='...'>" .
-                                                        "<button type='submit' name='edit' value='" .
-                                                        $user_rfid->rfid .
-                                                        "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
-                                                        "<button type='submit' name='delete' value='" .
-                                                        $user_rfid->rfid .
-                                                        "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
-                                                        "</div>" .
-                                                        "</td></tr>";
-                                                        echo "</form>";
+                                                    if ($rfid_users) {
+                                                        foreach ($rfid_users as $user_rfid) {
+                                                            echo "<form action='editarRfid' method='post'>";
+                                                            echo "<tr><td>";
+                                                            echo $user_rfid->rfid;
+                                                            echo"</td><td>";
+                                                            echo $user_rfid->nome;
+                                                            echo "</td><td>";
+                                                            echo $user_rfid->rfidActive;
+                                                            echo "</td><td>" .
+                                                            "<div class='btn-group' role='group' aria-label='...'>" .
+                                                            "<button type='submit' name='edit' value='" .
+                                                            $user_rfid->rfid .
+                                                            "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
+                                                            "<button type='submit' name='delete' value='" .
+                                                            $user_rfid->rfid .
+                                                            "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
+                                                            "</div>" .
+                                                            "</td></tr>";
+                                                            echo "</form>";
+                                                        }
                                                     }
                                                     ?>
                                                 </tbody>
@@ -182,25 +190,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    foreach ($rfid_pendentes as $rfid_pendente) {
-                                                        echo "<form action='editarRfid' method='post'>";
-                                                        echo "<tr><td>";
-                                                        echo $rfid_pendente->pin;
-                                                        echo"</td><td>";
-                                                        echo $rfid_pendente->rfid;
-                                                        echo "</td><td>";
-                                                        echo date("d-m-Y - H:i:s", strtotime($rfid_pendente->data));
-                                                        echo "</td><td>" .
-                                                        "<div class='btn-group' role='group' aria-label='...'>" .
-                                                        "<button type='submit' name='edit' value='" .
-                                                        $rfid_pendente->rfid .
-                                                        "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
-                                                        "<button type='submit' name='delete' value='" .
-                                                        $rfid_pendente->rfid .
-                                                        "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
-                                                        "</div>" .
-                                                        "</td></tr>";
-                                                        echo "</form>";
+                                                    if ($rfid_pendentes) {
+                                                        foreach ($rfid_pendentes as $rfid_pendente) {
+                                                            echo "<form action='editarRfid' method='post'>";
+                                                            echo "<tr><td>";
+                                                            echo $rfid_pendente->pin;
+                                                            echo"</td><td>";
+                                                            echo $rfid_pendente->rfid;
+                                                            echo "</td><td>";
+                                                            echo date("d-m-Y - H:i:s", strtotime($rfid_pendente->data));
+                                                            echo "</td><td>" .
+                                                            "<div class='btn-group' role='group' aria-label='...'>" .
+                                                            "<button type='submit' name='edit' value='" .
+                                                            $rfid_pendente->rfid .
+                                                            "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
+                                                            "<button type='submit' name='delete' value='" .
+                                                            $rfid_pendente->rfid .
+                                                            "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
+                                                            "</div>" .
+                                                            "</td></tr>";
+                                                            echo "</form>";
+                                                        }
                                                     }
                                                     ?>
                                                 </tbody>
@@ -218,15 +228,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    foreach ($logs as $log) {
-                                        echo "<tr><td>";
-                                        echo date("d-m-Y - H:i:s", strtotime($log->data));
-                                        echo"</td><td>";
-                                        echo $log->mensagem;
-                                        echo "</td></tr>";
-                                    }
-                                    ?>
+                                <div class="col-md-3">
+                                    <form action="logs" method="GET">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="rfid" id="rfid" placeholder="Procurar RFID">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                                <?php
+                                foreach ($logs as $log) {
+                                    echo "<tr><td>";
+                                    echo date("d-m-Y - H:i:s", strtotime($log->data));
+                                    echo"</td><td>";
+                                    echo $log->mensagem;
+                                    echo "</td></tr>";
+                                }
+                                ?>
                                 </tbody>
                             </table>
                         <?php } else if ($action === "horarios") { ?>
@@ -250,49 +270,51 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </thead>
                                         <tbody>
                                             <?php
-                                            foreach ($horarios as $horario) {
-                                                echo "<form action='editarHorario' method='post'>";
-                                                echo "<tr><td>";
-                                                echo $horario->nome;
-                                                echo"</td><td>";
-                                                echo date("H:i", strtotime($horario->horainicio));
-                                                echo"</td><td>";
-                                                echo date("H:i", strtotime($horario->horafim));
-                                                echo "</td><td>";
-                                                $strDays = "";
-                                                if ($horario->seg) {
-                                                    $strDays .= "seg-";
+                                            if ($horarios) {
+                                                foreach ($horarios as $horario) {
+                                                    echo "<form action='editarHorario' method='post'>";
+                                                    echo "<tr><td>";
+                                                    echo $horario->nome;
+                                                    echo"</td><td>";
+                                                    echo date("H:i", strtotime($horario->horainicio));
+                                                    echo"</td><td>";
+                                                    echo date("H:i", strtotime($horario->horafim));
+                                                    echo "</td><td>";
+                                                    $strDays = "";
+                                                    if ($horario->seg) {
+                                                        $strDays .= "seg-";
+                                                    }
+                                                    if ($horario->ter) {
+                                                        $strDays .= "ter-";
+                                                    }
+                                                    if ($horario->qua) {
+                                                        $strDays .= "qua-";
+                                                    }
+                                                    if ($horario->qui) {
+                                                        $strDays .= "qui-";
+                                                    }
+                                                    if ($horario->sex) {
+                                                        $strDays .= "sex-";
+                                                    }
+                                                    if ($horario->sab) {
+                                                        $strDays .= "sab-";
+                                                    }
+                                                    if ($horario->dom) {
+                                                        $strDays .= "dom-";
+                                                    }
+                                                    echo substr($strDays, 0, -1);
+                                                    echo "</td><td>" .
+                                                    "<div class='btn-group' role='group' aria-label='...'>" .
+                                                    "<button type='submit' name='edit' value='" .
+                                                    $horario->idhorario .
+                                                    "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
+                                                    "<button type='submit' name='delete' value='" .
+                                                    $horario->idhorario .
+                                                    "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
+                                                    "</div>" .
+                                                    "</td></tr>";
+                                                    echo "</form>";
                                                 }
-                                                if ($horario->ter) {
-                                                    $strDays .= "ter-";
-                                                }
-                                                if ($horario->qua) {
-                                                    $strDays .= "qua-";
-                                                }
-                                                if ($horario->qui) {
-                                                    $strDays .= "qui-";
-                                                }
-                                                if ($horario->sex) {
-                                                    $strDays .= "sex-";
-                                                }
-                                                if ($horario->sab) {
-                                                    $strDays .= "sab-";
-                                                }
-                                                if ($horario->dom) {
-                                                    $strDays .= "dom-";
-                                                }
-                                                echo substr($strDays, 0, -1);
-                                                echo "</td><td>" .
-                                                "<div class='btn-group' role='group' aria-label='...'>" .
-                                                "<button type='submit' name='edit' value='" .
-                                                $horario->idhorario .
-                                                "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
-                                                "<button type='submit' name='delete' value='" .
-                                                $horario->idhorario .
-                                                "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
-                                                "</div>" .
-                                                "</td></tr>";
-                                                echo "</form>";
                                             }
                                             ?>
                                         </tbody>
@@ -320,31 +342,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </thead>
                                         <tbody>
                                             <?php
-                                            foreach ($periodos as $periodo) {
-                                                echo "<form action='editarPeriodo' method='post'>";
-                                                echo "<tr><td>";
-                                                echo $periodo->nome;
-                                                echo"</td><td>";
-                                                echo date('d-m-Y', strtotime($periodo->datainicio));
-                                                echo"</td><td>";
-                                                echo date('d-m-Y', strtotime($periodo->datafim));
-                                                echo "</td><td>";
-                                                if ($periodo->feriadoAtivo) {
-                                                    echo "Sim";
-                                                } else {
-                                                    echo "Não";
+                                            if ($periodos) {
+                                                foreach ($periodos as $periodo) {
+                                                    echo "<form action='editarPeriodo' method='post'>";
+                                                    echo "<tr><td>";
+                                                    echo $periodo->nome;
+                                                    echo"</td><td>";
+                                                    echo date('d-m-Y', strtotime($periodo->datainicio));
+                                                    echo"</td><td>";
+                                                    echo date('d-m-Y', strtotime($periodo->datafim));
+                                                    echo "</td><td>";
+                                                    if ($periodo->feriadoAtivo) {
+                                                        echo "Sim";
+                                                    } else {
+                                                        echo "Não";
+                                                    }
+                                                    echo "</td><td>" .
+                                                    "<div class='btn-group' role='group' aria-label='...'>" .
+                                                    "<button type='submit' name='edit' value='" .
+                                                    $periodo->idperiodo .
+                                                    "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
+                                                    "<button type='submit' name='delete' value='" .
+                                                    $periodo->idperiodo .
+                                                    "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
+                                                    "</div>" .
+                                                    "</td></tr>";
+                                                    echo "</form>";
                                                 }
-                                                echo "</td><td>" .
-                                                "<div class='btn-group' role='group' aria-label='...'>" .
-                                                "<button type='submit' name='edit' value='" .
-                                                $periodo->idperiodo .
-                                                "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
-                                                "<button type='submit' name='delete' value='" .
-                                                $periodo->idperiodo .
-                                                "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
-                                                "</div>" .
-                                                "</td></tr>";
-                                                echo "</form>";
                                             }
                                             ?>
                                         </tbody>
@@ -370,23 +394,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </thead>
                                         <tbody>
                                             <?php
-                                            foreach ($feriados as $feriado) {
-                                                echo "<form action='editarFeriado' method='post'>";
-                                                echo "<tr><td>";
-                                                echo $feriado->nome;
-                                                echo"</td><td>";
-                                                echo date('d-m-Y', strtotime($feriado->data));
-                                                echo "</td><td>" .
-                                                "<div class='btn-group' role='group' aria-label='...'>" .
-                                                "<button type='submit' name='edit' value='" .
-                                                $feriado->idferiado .
-                                                "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
-                                                "<button type='submit' name='delete' value='" .
-                                                $feriado->idferiado .
-                                                "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
-                                                "</div>" .
-                                                "</td></tr>";
-                                                echo "</form>";
+                                            if ($feriados) {
+                                                foreach ($feriados as $feriado) {
+                                                    echo "<form action='editarFeriado' method='post'>";
+                                                    echo "<tr><td>";
+                                                    echo $feriado->nome;
+                                                    echo"</td><td>";
+                                                    echo date('d-m-Y', strtotime($feriado->data));
+                                                    echo "</td><td>" .
+                                                    "<div class='btn-group' role='group' aria-label='...'>" .
+                                                    "<button type='submit' name='edit' value='" .
+                                                    $feriado->idferiado .
+                                                    "' class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></button>" .
+                                                    "<button type='submit' name='delete' value='" .
+                                                    $feriado->idferiado .
+                                                    "'class='btn btn-default'><span class='glyphicon glyphicon-trash'></span></button>" .
+                                                    "</div>" .
+                                                    "</td></tr>";
+                                                    echo "</form>";
+                                                }
                                             }
                                             ?>
                                         </tbody>

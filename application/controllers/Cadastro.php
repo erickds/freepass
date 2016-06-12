@@ -38,15 +38,17 @@ class Cadastro extends CI_Controller {
         $periodos = $this->Admin_model->list_periodos();
 
         $idperiods = array();
-        foreach ($periodos as $periodo) {
-            if ($this->input->post($periodo->nome)) {
-                array_push($idperiods, $periodo->idperiodo);
+        if ($periodos) {
+            foreach ($periodos as $periodo) {
+                if ($this->input->post($periodo->nome)) {
+                    array_push($idperiods, $periodo->idperiodo);
+                }
             }
+
+
+            $this->load->model('Periodo_model');
+            $periodos = $this->Periodo_model->insert_pessoa_periodos($user[0]->id, $idperiods);
         }
-
-        $this->load->model('Periodo_model');
-        $periodos = $this->Periodo_model->insert_pessoa_periodos($user[0]->id, $idperiods);
-
         if ($result) {
             $dados = array(
                 "alerta" => "Operação realizada com sucesso!"
@@ -304,17 +306,19 @@ class Cadastro extends CI_Controller {
         $result = $this->User_model->update($user);
 
         $this->Admin_model->delete_pessoa_periodo($usr[0]->id);
-        $periodos = $this->Admin_model->list_periodos();
+        if ($periodos = $this->Admin_model->list_periodos()) {
 
-        $idperiods = array();
-        foreach ($periodos as $periodo) {
-            if ($this->input->post($periodo->nome)) {
-                array_push($idperiods, $periodo->idperiodo);
+            $idperiods = array();
+
+            foreach ($periodos as $periodo) {
+                if ($this->input->post($periodo->nome)) {
+                    array_push($idperiods, $periodo->idperiodo);
+                }
             }
-        }
 
-        $this->load->model('Periodo_model');
-        $periodos = $this->Periodo_model->insert_pessoa_periodos($usr[0]->id, $idperiods);
+            $this->load->model('Periodo_model');
+            $periodos = $this->Periodo_model->insert_pessoa_periodos($usr[0]->id, $idperiods);
+        }
         if ($result) {
             $dados = array(
                 "alerta" => "Operação realizada com sucesso!"
@@ -325,6 +329,67 @@ class Cadastro extends CI_Controller {
             );
         }
         redirect('/admin/home?opType=2', 'refresh');
+    }
+
+    public function updateUser() {
+        $this->load->model('User_model');
+        $this->load->model('Admin_model');
+        //Pegando parametros recebidos via POST
+        $nome = $this->input->post('nome');
+        $email = $this->input->post('email');
+        $senha = $this->input->post('senha');
+        $telefone = $this->input->post('telefone');
+        $endereco = $this->input->post('endereco');
+        $dpto = $this->input->post('dpto');
+        $cpf = $this->input->post('cpf');
+        if ($this->input->post('isAdmin'))
+            $isAdmin = 1;
+        else
+            $isAdmin = 0;
+        $isActive = $this->input->post('isActive');
+
+        $url = $this->do_upload();
+
+        $user = array(
+            'cpf' => $cpf,
+            'nome' => $nome,
+            'email' => $email,
+            'senha' => base64_encode($senha),
+            'foto' => $url,
+            'telefone' => $telefone,
+            'endereco' => $endereco,
+            'dpto' => $dpto,
+            'isActive' => $isActive,
+            'isAdmin' => $isAdmin
+        );
+        $session = array();
+        if ($url) {
+            $session['foto'] = $url;
+        }
+        $session['nome'] = $nome;
+
+        $usr = $this->Admin_model->select_user_cpf($cpf);
+        if ($user['foto'] != null) {
+            unlink("." . $usr[0]->foto);
+        }
+        $user = array_filter($user);
+
+        $result = $this->User_model->update($user);
+
+
+        //inicializa session
+        $this->session->set_userdata($session);
+
+        if ($result) {
+            $dados = array(
+                "alerta" => "Operação realizada com sucesso!"
+            );
+        } else {
+            $dados = array(
+                "alerta" => "Houve um erro ao tentar realizar esta operação"
+            );
+        }
+        redirect('/home', 'refresh');
     }
 
     public function updateRfid() {
@@ -355,6 +420,35 @@ class Cadastro extends CI_Controller {
             );
         }
         redirect('/admin/cartoes?opType=1', 'refresh');
+    }
+
+    public function ativaDesativaRfid() {
+        $this->load->model('Rfid_model');
+        $this->load->model('Admin_model');
+        //Pegando parametros recebidos via POST
+        if (isset($_POST['ativa'])) {
+            $rfidActive = 1;
+            $rfid = $this->input->post('ativa');
+        } else if (isset($_POST['desativa'])) {
+            $rfidActive = 0;
+            $rfid = $this->input->post('desativa');
+        }
+        $user_rfid = array(
+            'rfid' => $rfid,
+            'rfidActive' => $rfidActive,
+        );
+
+        $result = $this->Rfid_model->update($user_rfid);
+        if ($result) {
+            $dados = array(
+                "alerta" => "Operação realizada com sucesso!"
+            );
+        } else {
+            $dados = array(
+                "alerta" => "Houve um erro ao tentar realizar esta operação"
+            );
+        }
+        redirect('/home/cartoes', 'refresh');
     }
 
     public function updateHorario() {

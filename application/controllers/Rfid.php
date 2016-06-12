@@ -7,7 +7,7 @@ class Rfid extends CI_Controller {
     public function entrar() {
         $alerta = null;
         if ($this->input->post('entrar') === "entrar") {
-            $this->form_validation->set_rules('rfid', 'RFID', 'required|numeric|exact_length[9]');
+            $this->form_validation->set_rules('rfid', 'RFID', 'required|numeric|max_length[12]');
 
             if ($this->form_validation->run() === TRUE) {
 
@@ -22,6 +22,7 @@ class Rfid extends CI_Controller {
                 if ($user_rfid) {
                     //configura session
                     $session = array(
+                        'id' => $user_rfid[0]->id,
                         'nome' => $user_rfid[0]->nome,
                         'rfid' => $user_rfid[0]->rfid,
                         'foto' => $user_rfid[0]->foto,

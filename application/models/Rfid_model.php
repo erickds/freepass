@@ -105,4 +105,23 @@ class Rfid_model extends CI_Model {
         }
     }
 
+    public function select_rfids_from_user($id) {
+        //select * from rfid
+        $this->db->from('Rfid r');
+        //join Pessoa p on r.id_pessoa=p.id
+        //para pegar apenas usuarios utilizando rfid linha comentada abaixo
+        $this->db->join('Pessoa p', 'r.id_pessoa=p.id', 'left');
+
+        $this->db->where('r.id_pessoa', $id);
+        //setando query
+        $rfid_user_ok = $this->db->get();
+
+        if ($rfid_user_ok->num_rows()) {
+            //Executa a query e retorna para controller Admin o array com os usuários.
+            return $rfid_user_ok->result();
+        } else {
+            return FALSE;
+        }
+    }
+
 }

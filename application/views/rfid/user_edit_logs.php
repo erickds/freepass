@@ -1,0 +1,71 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+?><!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>Free Pass</title>
+
+        <!-- Bootstrap -->
+        <link href="<?php echo base_url('assets/css/bootstrap.min.css'); ?>" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="page-header" align="center">
+                    <h1>Cadastro</h1>
+                    <h5>Gerencie aqui seu cadastro</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-2 col-md-8" >
+                    <div>
+                        <a class="btn btn-default" href="<?php echo site_url("home") ?>" role="button">
+                            Voltar</a>
+                    </div><br>
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">Cadastro de Usuário</div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Horário</th>
+                                        <th>Evento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                foreach ($logs as $log) {
+                                    echo "<tr><td>";
+                                    echo date("d-m-Y - H:i:s", strtotime($log->data));
+                                    echo"</td><td>";
+                                    echo $log->mensagem;
+                                    echo "</td></tr>";
+                                }
+                                ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+            <!-- Include all compiled plugins (below), or include individual files as needed -->
+            <script src="<?php echo base_url('assets/js/bootstrap.min.js'); ?>"></script>
+    </body>
+</html>
