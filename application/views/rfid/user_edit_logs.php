@@ -24,8 +24,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="container">
             <div class="row">
                 <div class="page-header" align="center">
-                    <h1>Cadastro</h1>
-                    <h5>Gerencie aqui seu cadastro</h5>
+                    <h1>Logs</h1>
+                    <h5>Visualize aqui todos os acessos e tentativas de acesso efetuadas com seus cartões RFID</h5>
                 </div>
             </div>
             <div class="row">

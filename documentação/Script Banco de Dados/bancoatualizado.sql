@@ -24,9 +24,10 @@ DROP TABLE IF EXISTS `feriados`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `feriados` (
   `idferiado` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(45) DEFAULT NULL,
   `data` datetime NOT NULL,
   PRIMARY KEY (`idferiado`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,17 +39,18 @@ DROP TABLE IF EXISTS `horarios`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `horarios` (
   `idhorario` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(45) DEFAULT NULL,
   `horainicio` datetime NOT NULL,
   `horafim` datetime NOT NULL,
-  `seg` varchar(1) NOT NULL,
-  `ter` varchar(1) NOT NULL,
-  `qua` varchar(1) NOT NULL,
-  `qui` varchar(1) NOT NULL,
-  `sex` varchar(1) NOT NULL,
-  `sab` varchar(1) NOT NULL,
-  `dom` varchar(1) NOT NULL,
+  `seg` varchar(1) DEFAULT '0',
+  `ter` varchar(1) DEFAULT '0',
+  `qua` varchar(1) DEFAULT '0',
+  `qui` varchar(1) DEFAULT '0',
+  `sex` varchar(1) DEFAULT '0',
+  `sab` varchar(1) DEFAULT '0',
+  `dom` varchar(1) DEFAULT '0',
   PRIMARY KEY (`idhorario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,30 +68,7 @@ CREATE TABLE `logs` (
   `data` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_pessoa_idx` (`id_pessoa`)
-) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `operacao`
---
-
-DROP TABLE IF EXISTS `operacao`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `operacao` (
-  `idoperacao` int(11) NOT NULL AUTO_INCREMENT,
-  `idhorario` int(11) NOT NULL,
-  `idperiodo` int(11) NOT NULL,
-  `idpessoa` int(11) NOT NULL,
-  `feriado` varchar(1) NOT NULL,
-  PRIMARY KEY (`idoperacao`),
-  KEY `fkhorario_idx` (`idhorario`),
-  KEY `fkperiodo_idx` (`idperiodo`),
-  KEY `fkpessoa_idx` (`idpessoa`),
-  CONSTRAINT `fkhorario` FOREIGN KEY (`idhorario`) REFERENCES `horarios` (`idhorario`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fkperiodo` FOREIGN KEY (`idperiodo`) REFERENCES `periodos` (`idperiodo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fkpessoa` FOREIGN KEY (`idpessoa`) REFERENCES `pessoa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=751 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,6 +87,23 @@ CREATE TABLE `pendentes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `periodo_horario`
+--
+
+DROP TABLE IF EXISTS `periodo_horario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `periodo_horario` (
+  `idPeriodo` int(11) NOT NULL,
+  `idHorario` int(11) NOT NULL,
+  KEY `idHorario_idx` (`idHorario`),
+  KEY `idPeriodo_idx` (`idPeriodo`),
+  CONSTRAINT `idHorario` FOREIGN KEY (`idHorario`) REFERENCES `horarios` (`idhorario`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `idPeriodo` FOREIGN KEY (`idPeriodo`) REFERENCES `periodos` (`idperiodo`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `periodos`
 --
 
@@ -116,10 +112,12 @@ DROP TABLE IF EXISTS `periodos`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `periodos` (
   `idperiodo` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(45) DEFAULT NULL,
   `datainicio` datetime NOT NULL,
   `datafim` datetime NOT NULL,
+  `feriadoAtivo` varchar(1) DEFAULT '0',
   PRIMARY KEY (`idperiodo`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,12 +135,31 @@ CREATE TABLE `pessoa` (
   `dpto` varchar(1) NOT NULL,
   `email` varchar(45) NOT NULL,
   `senha` varchar(45) NOT NULL,
-  `isAdmin` int(11) NOT NULL,
+  `isAdmin` varchar(1) NOT NULL DEFAULT '0',
   `cpf` varchar(11) NOT NULL,
-  `foto` longblob,
+  `foto` varchar(80) DEFAULT NULL,
+  `isActive` varchar(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `cpf_UNIQUE` (`cpf`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pessoa_periodo`
+--
+
+DROP TABLE IF EXISTS `pessoa_periodo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pessoa_periodo` (
+  `idPeriodo` int(11) NOT NULL,
+  `idPessoa` int(11) NOT NULL,
+  KEY `idPeriodo_idx` (`idPeriodo`),
+  KEY `fk_idPeriodo_idx` (`idPeriodo`),
+  KEY `fk_idPessoa_idx` (`idPessoa`),
+  CONSTRAINT `fk_idPeriodo` FOREIGN KEY (`idPeriodo`) REFERENCES `periodos` (`idperiodo`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_idPessoa` FOREIGN KEY (`idPessoa`) REFERENCES `pessoa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,12 +171,12 @@ DROP TABLE IF EXISTS `rfid`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rfid` (
   `rfid` varchar(12) CHARACTER SET utf8 NOT NULL,
-  `id_pessoa` int(11) NOT NULL,
-  `isActive` varchar(1) CHARACTER SET utf8 NOT NULL,
+  `id_pessoa` int(11) DEFAULT NULL,
+  `rfidActive` varchar(1) CHARACTER SET utf8 NOT NULL DEFAULT '0',
   `isMaster` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`rfid`),
   KEY `id_pessoa` (`id_pessoa`),
-  CONSTRAINT `fk_id_pessoa` FOREIGN KEY (`id_pessoa`) REFERENCES `pessoa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk-rfid-pessoa` FOREIGN KEY (`id_pessoa`) REFERENCES `pessoa` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -172,4 +189,4 @@ CREATE TABLE `rfid` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-02 14:02:33
+-- Dump completed on 2016-06-12 19:47:50
